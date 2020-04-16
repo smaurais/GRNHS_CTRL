@@ -8,20 +8,22 @@
 #include "ArduinoPLCBlocks.h"
 
 
-const char* ssid = "C51217F5340B";
-const char* password = "cogeco1274188";
+const char* ssid = "Laroche";
+const char* password = "redfox16";
 const char* hostname = "esp32cam1";
 
 FLASHER mytimer(1000,250);
 #define LED_PIN 33
+#define FLSH_LGT_PIN 4
 
 void setup() {
 
   pinMode(LED_PIN,OUTPUT);
+  pinMode(13,INPUT_PULLDOWN);
 
   Serial.begin(115200);
   Serial.println("Booting");
-  /* WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   WiFi.setHostname(hostname);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -39,7 +41,6 @@ void setup() {
         type = "sketch";
       else // U_SPIFFS
         type = "filesystem";
-
       Serial.println("Start updating " + type);
     })
     .onEnd([]() {
@@ -55,17 +56,19 @@ void setup() {
       else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
       else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
       else if (error == OTA_END_ERROR) Serial.println("End Failed");
+      else Serial.println("Unknown error");
     });
 
   ArduinoOTA.begin();
 
-  Serial.println("Ready");
+  Serial.print("Connected to: ");
+  Serial.println(ssid);
   Serial.print("IP address: ");
-  Serial.println(WiFi.localIP()); */
+  Serial.println(WiFi.localIP());
 }
 
 void loop() {
-  //ArduinoOTA.handle();
+  ArduinoOTA.handle();
 
   // put your main code here, to run repeatedly:
   mytimer.IN(true);
@@ -76,5 +79,8 @@ void loop() {
   }else{
     digitalWrite(LED_PIN, HIGH);
   }
+
+  Serial.println(touchRead(13));
+  delay(1000);
 
 }
